@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Apex Media — Interactive Digital Experiences</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          bg: '#0c0c0e',
+          surface: '#121214',
+          card: '#18181c',
+          border: '#24242a',
+          blue1: '#0052ff',
+          blue2: '#00d2ff',
+          silver: '#c8ccd6',
+          platinum: '#eaedf5',
+        },
+        fontFamily: {
+          display: ['"Archivo Black"', 'sans-serif'],
+          body: ['Inter', 'sans-serif'],
+        },
+      }
+    }
+  }
+</script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html { background: #0c0c0e; }
+  body { font-family: 'Inter', sans-serif; background: #0c0c0e; color: #eaedf5; overflow-x: hidden; }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: #0c0c0e; }
+  ::-webkit-scrollbar-thumb { background: #0052ff; border-radius: 2px; }
+
+  /* ── Nav blur ── */
+  #navbar {
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    background: rgba(12,12,14,0.72);
+    border-bottom: 1px solid rgba(0,82,255,0.15);
+    transition: box-shadow 0.3s;
+  }
+  #navbar.scrolled { box-shadow: 0 4px 40px rgba(0,82,255,0.12); }
+
+  /* ── Nav underline track ── */
+  .nav-link { position: relative; padding-bottom: 2px; }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0; bottom: 0;
+    width: 0; height: 1px;
+    background: linear-gradient(90deg, #0052ff, #00d2ff);
+    transition: width 0.3s ease;
+  }
+  .nav-link:hover::after { width: 100%; }
+
+  /* ── Glow button ── */
+  .btn-glow {
+    background: linear-gradient(135deg, #0052ff, #00d2ff);
+    box-shadow: 0 0 20px rgba(0,82,255,0.45), 0 0 40px rgba(0,210,255,0.15);
+    transition: box-shadow 0.3s, transform 0.2s;
+  }
+  .btn-glow:hover {
+    box-shadow: 0 0 30px rgba(0,82,255,0.7), 0 0 60px rgba(0,210,255,0.25);
+    transform: translateY(-1px);
+  }
+  .btn-glow:active { transform: translateY(0); }
+
+  /* ── Outline button ── */
+  .btn-outline {
+    border: 1px solid rgba(0,82,255,0.5);
+    color: #00d2ff;
+    transition: border-color 0.3s, background 0.3s, box-shadow 0.3s, transform 0.2s;
+  }
+  .btn-outline:hover {
+    border-color: #00d2ff;
+    background: rgba(0,210,255,0.06);
+    box-shadow: 0 0 16px rgba(0,210,255,0.2);
+    transform: translateY(-1px);
+  }
+
+  /* ── Hero headline gradient ── */
+  .headline-gradient {
+    background: linear-gradient(135deg, #ffffff 30%, #00d2ff 70%, #0052ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ── Ambient grid ── */
+  .grid-bg {
+    background-image:
+      linear-gradient(rgba(0,82,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,82,255,0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+
+  /* ── Blue noise / vignette overlay ── */
+  .vignette::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 40%, #0c0c0e 100%);
+    pointer-events: none;
+  }
+
+  /* ── Glow orbs ── */
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    pointer-events: none;
+  }
+  .orb-blue { background: rgba(0,82,255,0.18); }
+  .orb-cyan { background: rgba(0,210,255,0.10); }
+
+  /* ── Card hover ── */
+  .premium-card {
+    background: #18181c;
+    border: 1px solid #24242a;
+    transition: border-color 0.35s, box-shadow 0.35s, transform 0.35s;
+  }
+  .premium-card:hover {
+    border-color: rgba(0,82,255,0.5);
+    box-shadow: 0 8px 60px rgba(0,82,255,0.18), 0 2px 20px rgba(0,210,255,0.08);
+    transform: translateY(-6px);
+  }
+
+  /* ── Pricing card ── */
+  .pricing-card {
+    background: #18181c;
+    border: 1px solid #24242a;
+    transition: border-color 0.35s, box-shadow 0.35s, transform 0.35s;
+  }
+  .pricing-card.featured {
+    border-color: rgba(0,82,255,0.6);
+    box-shadow: 0 0 40px rgba(0,82,255,0.2);
+  }
+  .pricing-card:hover {
+    border-color: #00d2ff;
+    box-shadow: 0 8px 60px rgba(0,210,255,0.15);
+    transform: translateY(-6px);
+  }
+
+  /* ── Frosted badge ── */
+  .badge {
+    background: rgba(0,82,255,0.15);
+    border: 1px solid rgba(0,82,255,0.3);
+    backdrop-filter: blur(8px);
+  }
+
+  /* ── Form fields ── */
+  .form-field {
+    background: #18181c;
+    border: 1px solid #24242a;
+    color: #eaedf5;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    outline: none;
+  }
+  .form-field:focus {
+    border-color: #0052ff;
+    box-shadow: 0 0 0 3px rgba(0,82,255,0.12);
+  }
+  .form-field::placeholder { color: #4a4a58; }
+
+  /* ── Mobile menu ── */
+  #mobile-menu {
+    background: rgba(12,12,14,0.97);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(0,82,255,0.15);
+    transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+  }
+  #mobile-menu.open { max-height: 400px; opacity: 1; }
+
+  /* ── Section label ── */
+  .section-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: #00d2ff;
+  }
+
+  /* ── Cart mini ── */
+  .cart-badge {
+    background: linear-gradient(135deg, #0052ff, #00d2ff);
+    font-size: 10px;
+    min-width: 18px;
+    height: 18px;
+  }
+
+  /* ── Reveal animation ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── Stat counter ── */
+  .stat-num {
+    font-family: 'Archivo Black', sans-serif;
+    background: linear-gradient(135deg, #fff, #00d2ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ── Ticker stripe ── */
+  @keyframes ticker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .ticker-inner { animation: ticker 22s linear infinite; white-space: nowrap; }
+  .ticker-inner:hover { animation-play-state: paused; }
+
+  /* ── Cursor glow ── */
+  #cursor-glow {
+    position: fixed;
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,82,255,0.07) 0%, transparent 70%);
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    transition: left 0.12s ease, top 0.12s ease;
+    z-index: 0;
+  }
+
+  /* ── Success state ── */
+  #form-success {
+    display: none;
+    animation: fadeIn 0.5s ease forwards;
+  }
+  @keyframes fadeIn { from { opacity:0; transform: scale(0.97); } to { opacity:1; transform: scale(1); } }
+
+  /* ── Stagger delays ── */
+  .delay-100 { transition-delay: 0.1s; }
+  .delay-200 { transition-delay: 0.2s; }
+  .delay-300 { transition-delay: 0.3s; }
+  .delay-400 { transition-delay: 0.4s; }
+
+  /* Cart modal */
+  #cart-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(4px);
+    align-items: center;
+    justify-content: center;
+  }
+  #cart-modal.open { display: flex; }
+  .cart-panel {
+    background: #18181c;
+    border: 1px solid rgba(0,82,255,0.3);
+    box-shadow: 0 24px 80px rgba(0,82,255,0.25);
+    width: 100%;
+    max-width: 480px;
+    border-radius: 16px;
+    max-height: 80vh;
+    overflow-y: auto;
+    margin: 16px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal, .ticker-inner, .orb { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body class="antialiased">
+
+<!-- Cursor glow (desktop only) -->
+<div id="cursor-glow" aria-hidden="true"></div>
+
+<!-- ═══════════════════════════════════════════════════════
+     NAVIGATION
+════════════════════════════════════════════════════════ -->
+<nav id="navbar" class="fixed top-0 left-0 right-0 z-50">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 h-16 flex items-center justify-between">
+    <!-- Logo -->
+    <a href="#hero" class="sfx-click flex items-center gap-2 group">
+      <div class="w-8 h-8 rounded-lg btn-glow flex items-center justify-center">
+        <span class="font-display text-white text-xs font-black tracking-tighter">AM</span>
+      </div>
+      <span class="font-display text-white text-base tracking-wide">APEX <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue1 to-blue2">MEDIA</span></span>
+    </a>
+
+    <!-- Desktop nav -->
+    <div class="hidden md:flex items-center gap-8">
+      <a href="#work" class="sfx-click nav-link text-silver text-sm font-medium hover:text-platinum transition-colors">Work</a>
+      <a href="#services" class="sfx-click nav-link text-silver text-sm font-medium hover:text-platinum transition-colors">Services</a>
+      <a href="#pricing" class="sfx-click nav-link text-silver text-sm font-medium hover:text-platinum transition-colors">Pricing</a>
+      <a href="#contact" class="sfx-click nav-link text-silver text-sm font-medium hover:text-platinum transition-colors">Contact</a>
+    </div>
+
+    <!-- CTA + hamburger -->
+    <div class="flex items-center gap-4">
+      <a href="#contact" class="sfx-pop btn-glow hidden md:inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-white text-sm font-semibold">
+        Book a Call
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+      </a>
+      <button id="hamburger" class="sfx-click md:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5 rounded-lg border border-border" aria-label="Menu">
+        <span class="ham-line block w-5 h-0.5 bg-platinum transition-all duration-300"></span>
+        <span class="ham-line block w-5 h-0.5 bg-platinum transition-all duration-300"></span>
+        <span class="ham-line block w-3.5 h-0.5 bg-platinum transition-all duration-300"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile menu -->
+  <div id="mobile-menu">
+    <div class="px-6 py-6 flex flex-col gap-5">
+      <a href="#work" class="sfx-click mobile-link text-silver text-base font-medium hover:text-platinum transition-colors">Work</a>
+      <a href="#services" class="sfx-click mobile-link text-silver text-base font-medium hover:text-platinum transition-colors">Services</a>
+      <a href="#pricing" class="sfx-click mobile-link text-silver text-base font-medium hover:text-platinum transition-colors">Pricing</a>
+      <a href="#contact" class="sfx-click mobile-link text-silver text-base font-medium hover:text-platinum transition-colors">Contact</a>
+      <a href="#contact" class="sfx-pop btn-glow inline-flex items-center justify-center px-5 py-3 rounded-lg text-white text-sm font-semibold">Book a Strategy Call</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════
+     HERO
+════════════════════════════════════════════════════════ -->
+<section id="hero" class="relative min-h-screen flex flex-col justify-center pt-16 overflow-hidden grid-bg vignette">
+  <!-- Orbs -->
+  <div class="orb orb-blue w-[600px] h-[600px] top-[-100px] left-[-200px]"></div>
+  <div class="orb orb-cyan w-[400px] h-[400px] bottom-[-80px] right-[-100px]"></div>
+
+  <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-10 py-24 lg:py-32">
+    <!-- Eyebrow -->
+    <div class="reveal flex items-center gap-3 mb-10">
+      <span class="badge px-3 py-1 rounded-full section-label">Premium Agency</span>
+      <span class="w-12 h-px bg-gradient-to-r from-blue1 to-blue2"></span>
+      <span class="text-silver text-xs font-medium tracking-widest uppercase">Est. 2024</span>
+    </div>
+
+    <!-- Headline -->
+    <h1 class="reveal delay-100 font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-[96px] leading-[0.9] uppercase mb-8 max-w-5xl">
+      <span class="headline-gradient">We Design</span><br/>
+      <span class="text-platinum">Interactive</span><br/>
+      <span class="text-transparent" style="
+        -webkit-text-stroke: 1px rgba(0,210,255,0.4);
+      ">Digital</span><br/>
+      <span class="headline-gradient">Experiences</span>
+    </h1>
+
+    <!-- Sub -->
+    <p class="reveal delay-200 text-silver text-lg md:text-xl font-light max-w-xl mb-12 leading-relaxed">
+      Seamless performance. Surgical design. Web products engineered to convert visitors into clients — at <span class="text-blue2 font-medium">scale</span>.
+    </p>
+
+    <!-- CTAs -->
+    <div class="reveal delay-300 flex flex-wrap gap-4 mb-20">
+      <a href="#work" class="sfx-pop btn-glow px-8 py-4 rounded-xl text-white font-semibold text-sm tracking-wide">
+        View Live Demos
+      </a>
+      <a href="#contact" class="sfx-click btn-outline px-8 py-4 rounded-xl font-semibold text-sm tracking-wide">
+        Book a Strategy Call
+      </a>
+    </div>
+
+    <!-- Stats row -->
+    <div class="reveal delay-400 flex flex-wrap gap-10 pt-8 border-t border-border">
+      <div>
+        <div class="stat-num text-3xl font-display">48h</div>
+        <div class="text-silver text-xs mt-1 tracking-widest uppercase">Avg. Delivery</div>
+      </div>
+      <div>
+        <div class="stat-num text-3xl font-display">100%</div>
+        <div class="text-silver text-xs mt-1 tracking-widest uppercase">Custom Code</div>
+      </div>
+      <div>
+        <div class="stat-num text-3xl font-display">98+</div>
+        <div class="text-silver text-xs mt-1 tracking-widest uppercase">PageSpeed Score</div>
+      </div>
+      <div>
+        <div class="stat-num text-3xl font-display">3×</div>
+        <div class="text-silver text-xs mt-1 tracking-widest uppercase">Avg. Conv. Lift</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll hint -->
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-40">
+    <div class="text-silver text-xs tracking-widest uppercase">Scroll</div>
+    <div class="w-px h-8 bg-gradient-to-b from-blue1 to-transparent"></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     TICKER STRIP
+════════════════════════════════════════════════════════ -->
+<div class="border-y border-border py-3 overflow-hidden bg-surface">
+  <div class="ticker-inner inline-flex gap-12 text-xs font-medium text-silver tracking-[0.2em] uppercase">
+    <span>Web Design &amp; Development</span><span class="text-blue2">✦</span>
+    <span>Short-Form Video Editing</span><span class="text-blue2">✦</span>
+    <span>Conversion Rate Optimization</span><span class="text-blue2">✦</span>
+    <span>Interactive Prototyping</span><span class="text-blue2">✦</span>
+    <span>Brand Identity</span><span class="text-blue2">✦</span>
+    <span>E-Commerce Experiences</span><span class="text-blue2">✦</span>
+    <span>Web Design &amp; Development</span><span class="text-blue2">✦</span>
+    <span>Short-Form Video Editing</span><span class="text-blue2">✦</span>
+    <span>Conversion Rate Optimization</span><span class="text-blue2">✦</span>
+    <span>Interactive Prototyping</span><span class="text-blue2">✦</span>
+    <span>Brand Identity</span><span class="text-blue2">✦</span>
+    <span>E-Commerce Experiences</span><span class="text-blue2">✦</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SERVICES OVERVIEW
+════════════════════════════════════════════════════════ -->
+<section id="services" class="py-28 max-w-7xl mx-auto px-6 lg:px-10">
+  <div class="reveal flex items-center gap-4 mb-6">
+    <span class="section-label">What We Build</span>
+    <span class="flex-1 h-px bg-border max-w-[80px]"></span>
+  </div>
+  <h2 class="reveal delay-100 font-display text-4xl md:text-5xl text-platinum uppercase mb-6 max-w-2xl leading-tight">Capabilities Built to Win</h2>
+  <p class="reveal delay-200 text-silver max-w-xl mb-16 leading-relaxed">We operate at the intersection of engineering precision and visual instinct. Every deliverable ships production-ready.</p>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <!-- Card 1 -->
+    <div class="reveal premium-card rounded-2xl p-8 group cursor-default">
+      <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue1/20 to-blue2/10 border border-blue1/20 flex items-center justify-center mb-6 group-hover:border-blue1/50 transition-colors">
+        <svg class="w-5 h-5 text-blue2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+      </div>
+      <h3 class="font-display text-platinum text-xl uppercase mb-3">Web Design</h3>
+      <p class="text-silver text-sm leading-relaxed mb-6">Pixel-perfect, interactive websites engineered for speed and conversion. Every pixel earns its place.</p>
+      <div class="flex flex-wrap gap-2">
+        <span class="badge px-2.5 py-1 rounded-full text-xs text-blue2">Custom Dev</span>
+        <span class="badge px-2.5 py-1 rounded-full text-xs text-blue2">Micro-interactions</span>
+        <span class="badge px-2.5 py-1 rounded-full text-xs text-blue2">98+ PageSpeed</span>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="reveal delay-100 premium-card rounded-2xl p-8 group cursor-default">
+      <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue1/20 to-blue2/10 border border-blue1/20 flex items-center justify-center mb-6 group-hover:border-blue1/50 transition-colors">
+        <svg class="w-5 h-5 text-blue2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10l4.553-2.07A1 1 0 0121 8.868V15.13a1 1 0 01-1.447.902L15 14M3 8h12a2 2 0 012 2v4a2 2 0 01-2 2H3a2 2 0 01-2-2v-4a2 2 0 012-2z"/></svg>
+      </div>
+      <h3 class="font-display text-platinum text-xl uppercase mb-3">Video Editing</h3>
+      <p class="text-silver text-sm leading-relaxed mb-6">Crisp, music-free short-form content engineered for maximum audience retention and algorithmic reach.</p>
+      <div class="flex flex-wrap gap-2">
+        <span class="badge px-2.5 py-1 rounded-full text-xs text-blue2">Reels / Shorts</span>
+        <span class="badge px-2.5 py-1 rounded-full text-xs text-blue2">Motion Graphics</span>
+        <span class="badge px-2.5 py-1 rounded-full text-xs text-blue2">Fast Turnaround</span>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="reveal delay-200 premium-card rounded-2xl p-8 group cursor-default">
+      <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue1/20 to-blue2/10 border border-blue1/20 flex items-center justify-center mb-6 group-hover:border-blue1/50 transition-colors">
+        <svg class="w-5 h-5 text-blue2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+      </div>
+      <h3 class="font-display text-platinum text-xl uppercase mb-3">Growth Bundle</h3>
+      <p class="text-silver text-sm leading-relaxed mb-6">Full-stack brand amplification — a premium web presence fused with ongoing conversion content, every month.</p>
+      <div class="flex flex-wrap gap-2">
+        <span class="badge px-2.5 py-1 rounded-full text-xs text-blue2">Web + Video</span>
+        <span class="badge px-2.5 py-1 rounded-full text-xs text-blue2">Monthly Retainer</span>
+        <span class="badge px-2.5 py-1 rounded-full text-xs text-blue2">Strategy Included</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     PORTFOLIO / WORK
+════════════════════════════════════════════════════════ -->
+<section id="work" class="py-28 bg-surface border-y border-border">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="reveal flex items-center gap-4 mb-6">
+      <span class="section-label">Portfolio</span>
+      <span class="flex-1 h-px bg-border max-w-[80px]"></span>
+    </div>
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
+      <h2 class="reveal delay-100 font-display text-4xl md:text-5xl text-platinum uppercase leading-tight max-w-lg">Live Demos. Real Results.</h2>
+      <p class="reveal delay-200 text-silver text-sm max-w-xs leading-relaxed">Interactive builds, not mockups. Every demo ships as real, client-ready code.</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+      <!-- ── Fast-Food Ordering Platform (interactive) ── -->
+      <div class="reveal sfx-pop premium-card rounded-2xl overflow-hidden">
+        <!-- Preview header -->
+        <div class="relative bg-gradient-to-br from-[#0a0a0e] to-[#14141a] p-8 border-b border-border">
+          <div class="absolute top-4 left-4 flex gap-1.5">
+            <div class="w-3 h-3 rounded-full bg-red-500/60"></div>
+            <div class="w-3 h-3 rounded-full bg-yellow-500/60"></div>
+            <div class="w-3 h-3 rounded-full bg-green-500/60"></div>
+          </div>
+          <div class="pt-4 text-center mb-1">
+            <div class="inline-flex items-center gap-2 badge px-3 py-1 rounded-full text-xs text-blue2 mb-4">
+              <span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span>
+              Live Interactive Demo
+            </div>
+            <h3 class="font-display text-2xl text-platinum uppercase mb-2">Flare Fast Food</h3>
+            <p class="text-silver text-xs">High-Conversion Ordering Platform</p>
+          </div>
+
+          <!-- Mini ordering UI -->
+          <div id="ordering-app" class="mt-6 rounded-xl bg-[#0c0c0e] border border-border overflow-hidden">
+            <!-- Tabs -->
+            <div class="flex border-b border-border">
+              <button onclick="filterMenu('all')" class="sfx-click menu-tab flex-1 py-2.5 text-xs font-semibold text-blue2 border-b-2 border-blue1 transition-colors" data-cat="all">All</button>
+              <button onclick="filterMenu('burgers')" class="sfx-click menu-tab flex-1 py-2.5 text-xs font-medium text-silver hover:text-platinum border-b-2 border-transparent transition-colors" data-cat="burgers">Burgers</button>
+              <button onclick="filterMenu('sides')" class="sfx-click menu-tab flex-1 py-2.5 text-xs font-medium text-silver hover:text-platinum border-b-2 border-transparent transition-colors" data-cat="sides">Sides</button>
+              <button onclick="filterMenu('drinks')" class="sfx-click menu-tab flex-1 py-2.5 text-xs font-medium text-silver hover:text-platinum border-b-2 border-transparent transition-colors" data-cat="drinks">Drinks</button>
+            </div>
+            <!-- Menu items grid -->
+            <div id="menu-grid" class="grid grid-cols-2 gap-3 p-4">
+              <!-- Populated by JS -->
+            </div>
+            <!-- Cart bar -->
+            <div id="cart-bar" class="hidden border-t border-border p-4 flex items-center justify-between">
+              <div class="text-silver text-xs"><span id="cart-count">0</span> item(s) · <span class="text-platinum font-semibold">$<span id="cart-total">0.00</span></span></div>
+              <button onclick="openCart()" class="sfx-pop btn-glow px-4 py-2 rounded-lg text-white text-xs font-semibold">View Order →</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-6">
+          <div class="flex flex-wrap gap-2 mb-4">
+            <span class="badge px-2.5 py-1 rounded-full text-xs text-blue2">Live Cart System</span>
+            <span class="badge px-2.5 py-1 rounded-full text-xs text-blue2">Real-time Filtering</span>
+            <span class="badge px-2.5 py-1 rounded-full text-xs text-blue2">Custom UI Engine</span>
+          </div>
+          <p class="text-silver text-xs leading-relaxed">Fully functional ordering interface with live cart, category filtering, and smooth interactions — built in vanilla JS, zero dependencies.</p>
+        </div>
+      </div>
+
+      <!-- ── Premium E-Commerce ── -->
+      <div class="reveal delay-100 premium-card rounded-2xl overflow-hidden">
+        <div class="relative bg-gradient-to-br from-[#0a0a0e] to-[#14141a] p-8 border-b border-border min-h-[320px] flex flex-col items-center justify-center">
+          <div class="absolute top-4 left-4 flex gap-1.5">
+            <div class="w-3 h-3 rounded-full bg-red-500/60"></div>
+            <div class="w-3 h-3 rounded-full bg-yellow-500/60"></div>
+            <div class="w-3 h-3 rounded-full bg-green-500/60"></div>
+          </div>
+
+          <!-- Simulated E-Comm UI -->
+          <div class="w-full max-w-xs">
+            <div class="badge px-3 py-1 rounded-full text-xs text-blue2 mb-6 inline-flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-blue2"></span>
+              Concept Build · Coming Soon
+            </div>
+            <div class="rounded-xl border border-border bg-[#0c0c0e] overflow-hidden">
+              <!-- Fake product card -->
+              <div class="h-40 bg-gradient-to-br from-blue1/10 to-blue2/5 flex items-center justify-center">
+                <div class="text-center">
+                  <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-blue1/30 to-blue2/20 border border-blue1/20 flex items-center justify-center mb-2">
+                    <svg class="w-7 h-7 text-blue2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                  </div>
+                  <div class="text-platinum font-semibold text-sm">Luxe Collection</div>
+                  <div class="text-blue2 text-xs mt-1">$299.00</div>
+                </div>
+              </div>
+              <div class="p-4 flex gap-2">
+                <div class="flex-1 h-9 rounded-lg bg-surface border border-border flex items-center justify-center text-silver text-xs">S</div>
+                <div class="flex-1 h-9 rounded-lg bg-blue1 flex items-center justify-center text-white text-xs font-semibold">M</div>
+                <div class="flex-1 h-9 rounded-lg bg-surface border border-border flex items-center justify-center text-silver text-xs">L</div>
+                <div class="flex-1 h-9 rounded-lg bg-surface border border-border flex items-center justify-center text-silver text-xs">XL</div>
+              </div>
+              <div class="px-4 pb-4">
+                <button class="sfx-pop btn-glow w-full py-2.5 rounded-lg text-white text-xs font-semibold">Add to Cart</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="p-6">
+          <div class="flex flex-wrap gap-2 mb-4">
+            <span class="badge px-2.5 py-1 rounded-full text-xs text-blue2">E-Commerce</span>
+            <span class="badge px-2.5 py-1 rounded-full text-xs text-blue2">Size / Variant Logic</span>
+            <span class="badge px-2.5 py-1 rounded-full text-xs text-blue2">Premium UX</span>
+          </div>
+          <p class="text-silver text-xs leading-relaxed">A high-end e-commerce experience — from product discovery to checkout — with fluid micro-interactions and smart variant logic.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     PRICING
+════════════════════════════════════════════════════════ -->
+<section id="pricing" class="py-28 max-w-7xl mx-auto px-6 lg:px-10">
+  <div class="reveal flex items-center gap-4 mb-6">
+    <span class="section-label">Transparent Pricing</span>
+    <span class="flex-1 h-px bg-border max-w-[80px]"></span>
+  </div>
+  <h2 class="reveal delay-100 font-display text-4xl md:text-5xl text-platinum uppercase mb-4 leading-tight">No Hidden Costs.</h2>
+  <p class="reveal delay-200 text-silver max-w-lg mb-16 leading-relaxed">Every tier is scoped, priced, and delivered with full transparency. Pick the one that matches your ambition.</p>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+    <!-- Tier 1 -->
+    <div class="reveal pricing-card rounded-2xl p-8 flex flex-col">
+      <div class="mb-8">
+        <div class="badge inline-flex px-3 py-1 rounded-full text-xs text-silver mb-4">Tier 01</div>
+        <h3 class="font-display text-xl text-platinum uppercase mb-2">Video Production</h3>
+        <p class="text-silver text-sm leading-relaxed mb-6">High-retention short-form content — crisp, music-free, algorithmically tuned.</p>
+        <div class="flex items-end gap-1 mb-1">
+          <span class="font-display text-4xl text-platinum">$150</span>
+          <span class="text-silver text-sm mb-1.5">– $300</span>
+        </div>
+        <span class="text-silver text-xs tracking-widest uppercase">per month</span>
+      </div>
+      <ul class="flex-1 space-y-3 mb-8">
+        <li class="flex items-start gap-3 text-silver text-sm"><span class="text-blue2 mt-0.5">✓</span> 4–8 edited short-form videos / mo</li>
+        <li class="flex items-start gap-3 text-silver text-sm"><span class="text-blue2 mt-0.5">✓</span> Captions &amp; motion text overlays</li>
+        <li class="flex items-start gap-3 text-silver text-sm"><span class="text-blue2 mt-0.5">✓</span> Platform-optimized exports</li>
+        <li class="flex items-start gap-3 text-silver text-sm"><span class="text-blue2 mt-0.5">✓</span> 48-hour delivery SLA</li>
+        <li class="flex items-start gap-3 text-silver text-sm"><span class="text-blue2 mt-0.5">✓</span> Unlimited revision rounds</li>
+      </ul>
+      <a href="#contact" class="sfx-click btn-outline px-6 py-3 rounded-xl text-center text-sm font-semibold">Get Started</a>
+    </div>
+
+    <!-- Tier 2 — Featured -->
+    <div class="reveal delay-100 pricing-card featured rounded-2xl p-8 flex flex-col relative overflow-hidden">
+      <div class="absolute top-0 right-0 badge px-3 py-1 rounded-bl-xl rounded-tr-2xl text-xs font-semibold text-blue2">Most Popular</div>
+      <div class="absolute inset-0 bg-gradient-to-b from-blue1/5 to-transparent pointer-events-none"></div>
+      <div class="relative mb-8">
+        <div class="badge inline-flex px-3 py-1 rounded-full text-xs text-blue2 mb-4">Tier 02</div>
+        <h3 class="font-display text-xl text-platinum uppercase mb-2">Premium Website</h3>
+        <p class="text-silver text-sm leading-relaxed mb-6">Fully custom, blazing-fast interactive site — built to convert and built to impress.</p>
+        <div class="flex items-end gap-1 mb-1">
+          <span class="font-display text-4xl text-platinum">$400</span>
+          <span class="text-silver text-sm mb-1.5">– $800</span>
+        </div>
+        <span class="text-silver text-xs tracking-widest uppercase">one-time</span>
+      </div>
+      <ul class="flex-1 space-y-3 mb-8 relative">
+        <li class="flex items-start gap-3 text-silver text-sm"><span class="text-blue2 mt-0.5">✓</span> Up to 6 custom sections / pages</li>
+        <li class="flex items-start gap-3 text-silver text-sm"><span class="text-blue2 mt-0.5">✓</span> Mobile-first responsive build</li>
+        <li class="flex items-start gap-3 text-silver text-sm"><span class="text-blue2 mt-0.5">✓</span> Micro-interactions &amp; animations</li>
+        <li class="flex items-start gap-3 text-silver text-sm"><span class="text-blue2 mt-0.5">✓</span> 98+ Lighthouse performance</li>
+        <li class="flex items-start gap-3 text-silver text-sm"><span class="text-blue2 mt-0.5">✓</span> Contact form + lead capture</li>
+        <li class="flex items-start gap-3 text-silver text-sm"><span class="text-blue2 mt-0.5">✓</span> 14-day post-launch support</li>
+      </ul>
+      <a href="#contact" class="sfx-pop btn-glow px-6 py-3 rounded-xl text-center text-white text-sm font-semibold relative">Get Started</a>
+    </div>
+
+    <!-- Tier 3 -->
+    <div class="reveal delay-200 pricing-card rounded-2xl p-8 flex flex-col">
+      <div class="mb-8">
+        <div class="badge inline-flex px-3 py-1 rounded-full text-xs text-silver mb-4">Tier 03</div>
+        <h3 class="font-display text-xl text-platinum uppercase mb-2">Apex Growth Bundle</h3>
+        <p class="text-silver text-sm leading-relaxed mb-6">Elite web development fused with ongoing conversion content — the full-stack brand engine.</p>
+        <div class="flex items-end gap-1 mb-1">
+          <span class="font-display text-4xl text-platinum">$1,200</span>
+          <span class="text-silver text-sm mb-1.5">+</span>
+        </div>
+        <span class="text-silver text-xs tracking-widest uppercase">per month</span>
+      </div>
+      <ul class="flex-1 space-y-3 mb-8">
+        <li class="flex items-start gap-3 text-silver text-sm"><span class="text-blue2 mt-0.5">✓</span> Everything in Tier 01 &amp; 02</li>
+        <li class="flex items-start gap-3 text-silver text-sm"><span class="text-blue2 mt-0.5">✓</span> Dedicated account manager</li>
+        <li class="flex items-start gap-3 text-silver text-sm"><span class="text-blue2 mt-0.5">✓</span> Monthly strategy calls</li>
+        <li class="flex items-start gap-3 text-silver text-sm"><span class="text-blue2 mt-0.5">✓</span> Priority turnaround (24h)</li>
+        <li class="flex items-start gap-3 text-silver text-sm"><span class="text-blue2 mt-0.5">✓</span> A/B testing + analytics reports</li>
+        <li class="flex items-start gap-3 text-silver text-sm"><span class="text-blue2 mt-0.5">✓</span> Ongoing site updates included</li>
+      </ul>
+      <a href="#contact" class="sfx-click btn-outline px-6 py-3 rounded-xl text-center text-sm font-semibold">Get Started</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     CONTACT / INQUIRY FORM
+════════════════════════════════════════════════════════ -->
+<section id="contact" class="py-28 bg-surface border-t border-border">
+  <div class="max-w-3xl mx-auto px-6 lg:px-10">
+    <div class="reveal flex items-center gap-4 mb-6">
+      <span class="section-label">Start a Project</span>
+      <span class="flex-1 h-px bg-border max-w-[80px]"></span>
+    </div>
+    <h2 class="reveal delay-100 font-display text-4xl md:text-5xl text-platinum uppercase mb-4 leading-tight">Let's Build Something Powerful.</h2>
+    <p class="reveal delay-200 text-silver mb-12 leading-relaxed">Fill in your details below and we'll respond within 24 hours. All inquiries go directly to <a href="mailto:apexmedia228@gmail.com" class="text-blue2 hover:underline">apexmedia228@gmail.com</a>.</p>
+
+    <!-- Form -->
+    <form id="inquiry-form" class="reveal delay-300 space-y-6" novalidate>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label class="block text-silver text-xs font-medium tracking-widest uppercase mb-2">Full Name *</label>
+          <input type="text" name="name" required placeholder="Your name" class="sfx-click form-field w-full px-4 py-3.5 rounded-xl text-sm" />
+        </div>
+        <div>
+          <label class="block text-silver text-xs font-medium tracking-widest uppercase mb-2">Business Email *</label>
+          <input type="email" name="email" required placeholder="you@company.com" class="sfx-click form-field w-full px-4 py-3.5 rounded-xl text-sm" />
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-silver text-xs font-medium tracking-widest uppercase mb-2">Project Type *</label>
+        <select name="project_type" required class="sfx-click form-field w-full px-4 py-3.5 rounded-xl text-sm appearance-none">
+          <option value="" disabled selected>Select what you need</option>
+          <option value="web">Premium Business Website</option>
+          <option value="video">Short-Form Video Editing</option>
+          <option value="bundle">Apex Growth Bundle</option>
+          <option value="ecommerce">E-Commerce Platform</option>
+          <option value="other">Other / Not Sure Yet</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-silver text-xs font-medium tracking-widest uppercase mb-2">Monthly Budget Range</label>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" id="budget-group">
+          <label class="sfx-click budget-option cursor-pointer">
+            <input type="radio" name="budget" value="under_500" class="sr-only" />
+            <div class="budget-label premium-card rounded-xl px-3 py-3 text-center text-silver text-xs font-medium transition-all">Under $500</div>
+          </label>
+          <label class="sfx-click budget-option cursor-pointer">
+            <input type="radio" name="budget" value="500_1200" class="sr-only" />
+            <div class="budget-label premium-card rounded-xl px-3 py-3 text-center text-silver text-xs font-medium transition-all">$500–$1,200</div>
+          </label>
+          <label class="sfx-click budget-option cursor-pointer">
+            <input type="radio" name="budget" value="1200_3000" class="sr-only" />
+            <div class="budget-label premium-card rounded-xl px-3 py-3 text-center text-silver text-xs font-medium transition-all">$1,200–$3,000</div>
+          </label>
+          <label class="sfx-click budget-option cursor-pointer">
+            <input type="radio" name="budget" value="3000_plus" class="sr-only" />
+            <div class="budget-label premium-card rounded-xl px-3 py-3 text-center text-silver text-xs font-medium transition-all">$3,000+</div>
+          </label>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-silver text-xs font-medium tracking-widest uppercase mb-2">Tell Us About Your Project</label>
+        <textarea name="message" rows="4" placeholder="What are you building? What's the goal? Any deadline?" class="sfx-click form-field w-full px-4 py-3.5 rounded-xl text-sm resize-none"></textarea>
+      </div>
+
+      <div id="form-error" class="hidden text-red-400 text-sm px-4 py-3 rounded-xl border border-red-500/30 bg-red-500/10"></div>
+
+      <button type="submit" class="sfx-pop btn-glow w-full py-4 rounded-xl text-white font-semibold text-base tracking-wide flex items-center justify-center gap-3">
+        <span>Send Inquiry</span>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+      </button>
+    </form>
+
+    <!-- Success state -->
+    <div id="form-success" class="text-center py-16">
+      <div class="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-blue1/30 to-blue2/20 border border-blue1/40 flex items-center justify-center mb-6">
+        <svg class="w-9 h-9 text-blue2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+      </div>
+      <h3 class="font-display text-3xl text-platinum uppercase mb-3">Message Sent!</h3>
+      <p class="text-silver leading-relaxed">We'll review your project details and get back to you within 24 hours at <span class="text-blue2">apexmedia228@gmail.com</span>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════════════════ -->
+<footer class="border-t border-border py-12">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 flex flex-col md:flex-row items-center justify-between gap-6">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-lg btn-glow flex items-center justify-center">
+        <span class="font-display text-white text-xs font-black">AM</span>
+      </div>
+      <span class="font-display text-white text-sm tracking-wide">APEX <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue1 to-blue2">MEDIA</span></span>
+    </div>
+    <div class="flex gap-6 text-silver text-sm">
+      <a href="#work" class="sfx-click hover:text-platinum transition-colors">Work</a>
+      <a href="#pricing" class="sfx-click hover:text-platinum transition-colors">Pricing</a>
+      <a href="mailto:apexmedia228@gmail.com" class="sfx-click hover:text-blue2 transition-colors">apexmedia228@gmail.com</a>
+    </div>
+    <p class="text-silver text-xs">© 2024 Apex Media. All rights reserved.</p>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════════════════════
+     CART MODAL
+════════════════════════════════════════════════════════ -->
+<div id="cart-modal" role="dialog" aria-modal="true" aria-label="Your Order">
+  <div class="cart-panel">
+    <div class="p-6 border-b border-border flex items-center justify-between">
+      <h3 class="font-display text-platinum text-lg uppercase">Your Order</h3>
+      <button onclick="closeCart()" class="sfx-click w-8 h-8 rounded-lg border border-border flex items-center justify-center text-silver hover:text-platinum">✕</button>
+    </div>
+    <div id="cart-items-list" class="p-6 space-y-3 min-h-[100px]"></div>
+    <div class="p-6 border-t border-border">
+      <div class="flex justify-between text-platinum font-semibold mb-4">
+        <span>Total</span>
+        <span>$<span id="cart-modal-total">0.00</span></span>
+      </div>
+      <button onclick="checkoutDemo()" class="sfx-pop btn-glow w-full py-3 rounded-xl text-white font-semibold text-sm">Place Order (Demo)</button>
+      <p class="text-silver text-xs text-center mt-3">This is a live demo — no real order is placed.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════════════════════ -->
+<script>
+/* ─── Audio Engine ─── */
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let ctx = null;
+
+function getCtx() {
+  if (!ctx) ctx = new AudioCtx();
+  return ctx;
+}
+
+function playClick() {
+  try {
+    const c = getCtx();
+    const g = c.createGain();
+    g.connect(c.destination);
+    g.gain.setValueAtTime(0.12, c.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + 0.06);
+
+    const o = c.createOscillator();
+    o.type = 'square';
+    o.frequency.setValueAtTime(1800, c.currentTime);
+    o.frequency.exponentialRampToValueAtTime(900, c.currentTime + 0.06);
+    o.connect(g);
+    o.start(c.currentTime);
+    o.stop(c.currentTime + 0.06);
+  } catch(e) {}
+}
+
+function playPop() {
+  try {
+    const c = getCtx();
+    const g = c.createGain();
+    g.connect(c.destination);
+    g.gain.setValueAtTime(0.22, c.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + 0.12);
+
+    const o = c.createOscillator();
+    o.type = 'sine';
+    o.frequency.setValueAtTime(280, c.currentTime);
+    o.frequency.exponentialRampToValueAtTime(140, c.currentTime + 0.12);
+    o.connect(g);
+
+    // Click layer
+    const buf = c.createBuffer(1, c.sampleRate * 0.015, c.sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i = 0; i < d.length; i++) d[i] = (Math.random()*2-1) * (1 - i/d.length);
+    const src = c.createBufferSource();
+    src.buffer = buf;
+    const ng = c.createGain();
+    ng.gain.value = 0.3;
+    src.connect(ng);
+    ng.connect(c.destination);
+    src.start(c.currentTime);
+
+    o.start(c.currentTime);
+    o.stop(c.currentTime + 0.12);
+  } catch(e) {}
+}
+
+function playSuccess() {
+  try {
+    const c = getCtx();
+    const notes = [523.25, 659.25, 783.99, 1046.5]; // C5 E5 G5 C6
+    notes.forEach((freq, i) => {
+      const g = c.createGain();
+      g.connect(c.destination);
+      const start = c.currentTime + i * 0.13;
+      g.gain.setValueAtTime(0, start);
+      g.gain.linearRampToValueAtTime(0.18, start + 0.03);
+      g.gain.exponentialRampToValueAtTime(0.001, start + 0.28);
+
+      const o = c.createOscillator();
+      o.type = 'sine';
+      o.frequency.value = freq;
+      o.connect(g);
+      o.start(start);
+      o.stop(start + 0.28);
+    });
+  } catch(e) {}
+}
+
+/* ─── Bind sounds ─── */
+function bindSounds() {
+  document.querySelectorAll('.sfx-click').forEach(el => {
+    el.addEventListener('click', playClick);
+  });
+  document.querySelectorAll('.sfx-pop').forEach(el => {
+    el.addEventListener('click', playPop);
+  });
+}
+bindSounds();
+
+/* ─── Navbar scroll ─── */
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 30);
+});
+
+/* ─── Mobile menu ─── */
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobile-menu');
+const hamLines = document.querySelectorAll('.ham-line');
+let menuOpen = false;
+
+hamburger.addEventListener('click', () => {
+  playClick();
+  menuOpen = !menuOpen;
+  mobileMenu.classList.toggle('open', menuOpen);
+  hamLines[0].style.transform = menuOpen ? 'rotate(45deg) translate(4px,4px)' : '';
+  hamLines[1].style.opacity = menuOpen ? '0' : '1';
+  hamLines[2].style.transform = menuOpen ? 'rotate(-45deg) translate(4px,-4px)' : '';
+  hamLines[2].style.width = menuOpen ? '20px' : '';
+});
+
+document.querySelectorAll('.mobile-link').forEach(link => {
+  link.addEventListener('click', () => {
+    menuOpen = false;
+    mobileMenu.classList.remove('open');
+    hamLines[0].style.transform = '';
+    hamLines[1].style.opacity = '1';
+    hamLines[2].style.transform = '';
+    hamLines[2].style.width = '';
+  });
+});
+
+/* ─── Smooth anchor scroll ─── */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+
+/* ─── Scroll reveal ─── */
+const revealEls = document.querySelectorAll('.reveal');
+const ro = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      ro.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.12 });
+revealEls.forEach(el => ro.observe(el));
+
+/* ─── Cursor glow ─── */
+const glow = document.getElementById('cursor-glow');
+window.addEventListener('mousemove', e => {
+  glow.style.left = e.clientX + 'px';
+  glow.style.top = e.clientY + 'px';
+});
+
+/* ─── Budget radio styling ─── */
+document.querySelectorAll('.budget-option input').forEach(radio => {
+  radio.addEventListener('change', () => {
+    document.querySelectorAll('.budget-label').forEach(l => {
+      l.style.borderColor = '';
+      l.style.color = '';
+      l.style.background = '';
+    });
+    const lbl = radio.parentElement.querySelector('.budget-label');
+    lbl.style.borderColor = 'rgba(0,82,255,0.7)';
+    lbl.style.color = '#00d2ff';
+    lbl.style.background = 'rgba(0,82,255,0.1)';
+  });
+});
+
+/* ─── Contact form ─── */
+document.getElementById('inquiry-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const errEl = document.getElementById('form-error');
+  const name = this.name.value.trim();
+  const email = this.email.value.trim();
+  const project = this.project_type.value;
+
+  if (!name || !email || !project) {
+    errEl.textContent = 'Please fill in your name, email, and project type.';
+    errEl.classList.remove('hidden');
+    return;
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    errEl.textContent = 'Please enter a valid email address.';
+    errEl.classList.remove('hidden');
+    return;
+  }
+
+  errEl.classList.add('hidden');
+  playSuccess();
+  this.style.display = 'none';
+  const success = document.getElementById('form-success');
+  success.style.display = 'block';
+});
+
+/* ─── Fast-food ordering app ─── */
+const menuItems = [
+  { id: 1, name: 'Double Smash Burger', price: 12.99, cat: 'burgers', emoji: '🍔' },
+  { id: 2, name: 'Crispy Chicken Deluxe', price: 11.49, cat: 'burgers', emoji: '🍗' },
+  { id: 3, name: 'Classic Cheeseburger', price: 9.99, cat: 'burgers', emoji: '🫕' },
+  { id: 4, name: 'Truffle Fries', price: 4.99, cat: 'sides', emoji: '🍟' },
+  { id: 5, name: 'Onion Rings', price: 3.99, cat: 'sides', emoji: '🧅' },
+  { id: 6, name: 'Loaded Nachos', price: 5.49, cat: 'sides', emoji: '🌮' },
+  { id: 7, name: 'Frosted Milkshake', price: 5.99, cat: 'drinks', emoji: '🥤' },
+  { id: 8, name: 'Sparkling Lemonade', price: 3.49, cat: 'drinks', emoji: '🍋' },
+];
+
+let cart = {};
+let currentFilter = 'all';
+
+function renderMenu(filter) {
+  const grid = document.getElementById('menu-grid');
+  const items = filter === 'all' ? menuItems : menuItems.filter(i => i.cat === filter);
+  grid.innerHTML = items.map(item => `
+    <div class="rounded-xl bg-surface border border-border p-3 flex flex-col gap-2 transition-all hover:border-blue1/30">
+      <div class="text-2xl text-center">${item.emoji}</div>
+      <div class="text-platinum text-xs font-semibold leading-tight">${item.name}</div>
+      <div class="text-blue2 text-xs font-bold">$${item.price.toFixed(2)}</div>
+      <button onclick="addToCart(${item.id})" class="sfx-click mt-1 w-full py-1.5 rounded-lg text-xs font-semibold transition-all ${cart[item.id] ? 'bg-blue1 text-white' : 'border border-border text-silver hover:border-blue1/50 hover:text-platinum'}">
+        ${cart[item.id] ? `✓ ×${cart[item.id]}` : '+ Add'}
+      </button>
+    </div>
+  `).join('');
+  // re-bind new sfx-click buttons
+  grid.querySelectorAll('.sfx-click').forEach(el => {
+    el.addEventListener('click', playClick);
+  });
+}
+
+function filterMenu(cat) {
+  currentFilter = cat;
+  document.querySelectorAll('.menu-tab').forEach(t => {
+    const isActive = t.dataset.cat === cat;
+    t.classList.toggle('text-blue2', isActive);
+    t.classList.toggle('border-blue1', isActive);
+    t.classList.toggle('text-silver', !isActive);
+    t.classList.toggle('border-transparent', !isActive);
+  });
+  renderMenu(cat);
+}
+
+function addToCart(id) {
+  const item = menuItems.find(i => i.id === id);
+  cart[id] = (cart[id] || 0) + 1;
+  renderMenu(currentFilter);
+  updateCartBar();
+}
+
+function updateCartBar() {
+  const total = Object.entries(cart).reduce((sum, [id, qty]) => {
+    const item = menuItems.find(i => i.id === Number(id));
+    return sum + (item ? item.price * qty : 0);
+  }, 0);
+  const count = Object.values(cart).reduce((a, b) => a + b, 0);
+  document.getElementById('cart-count').textContent = count;
+  document.getElementById('cart-total').textContent = total.toFixed(2);
+  document.getElementById('cart-modal-total').textContent = total.toFixed(2);
+
+  const bar = document.getElementById('cart-bar');
+  if (count > 0) {
+    bar.classList.remove('hidden');
+    bar.classList.add('flex');
+  }
+  renderCartModal();
+}
+
+function renderCartModal() {
+  const list = document.getElementById('cart-items-list');
+  const entries = Object.entries(cart).filter(([,q]) => q > 0);
+  if (!entries.length) {
+    list.innerHTML = '<p class="text-silver text-sm text-center py-4">Your cart is empty.</p>';
+    return;
+  }
+  list.innerHTML = entries.map(([id, qty]) => {
+    const item = menuItems.find(i => i.id === Number(id));
+    return `
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <span class="text-xl">${item.emoji}</span>
+          <div>
+            <div class="text-platinum text-sm font-medium">${item.name}</div>
+            <div class="text-silver text-xs">$${item.price.toFixed(2)} each</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <button onclick="changeQty(${id}, -1)" class="sfx-click w-7 h-7 rounded-lg border border-border text-silver hover:text-platinum flex items-center justify-center text-sm">−</button>
+          <span class="text-platinum text-sm w-4 text-center">${qty}</span>
+          <button onclick="changeQty(${id}, 1)" class="sfx-click w-7 h-7 rounded-lg border border-border text-silver hover:text-platinum flex items-center justify-center text-sm">+</button>
+        </div>
+      </div>`;
+  }).join('');
+  list.querySelectorAll('.sfx-click').forEach(el => el.addEventListener('click', playClick));
+}
+
+function changeQty(id, delta) {
+  cart[id] = Math.max(0, (cart[id] || 0) + delta);
+  if (cart[id] === 0) delete cart[id];
+  renderMenu(currentFilter);
+  updateCartBar();
+}
+
+function openCart() { playPop(); document.getElementById('cart-modal').classList.add('open'); }
+function closeCart() { playClick(); document.getElementById('cart-modal').classList.remove('open'); }
+document.getElementById('cart-modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('cart-modal')) closeCart();
+});
+
+function checkoutDemo() {
+  playSuccess();
+  closeCart();
+  cart = {};
+  document.getElementById('cart-bar').classList.add('hidden');
+  document.getElementById('cart-bar').classList.remove('flex');
+  renderMenu(currentFilter);
+  // little toast
+  const toast = document.createElement('div');
+  toast.className = 'fixed bottom-8 left-1/2 -translate-x-1/2 z-[99999] badge px-6 py-3 rounded-2xl text-blue2 text-sm font-semibold';
+  toast.textContent = '✓ Order placed! (Demo)';
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}
+
+// Init ordering app
+renderMenu('all');
+</script>
+</body>
+</html>
